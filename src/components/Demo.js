@@ -3,25 +3,33 @@ import { Box, Stack } from 'grommet';
 import { InProgress } from 'grommet-icons';
 import styled from 'styled-components';
 
-const width = '320px';
-const height = '568px';
-
-const Demo = ({ status, src }) => (
+const Demo = ({
+  status,
+  src,
+  width = '360px',
+  height = '640px',
+  withFrame = false,
+}) => (
   <Box
     background={{ color: 'brand' }}
     gap="large"
-    round="large"
+    round={withFrame ? 'large' : 'xsmall'}
     align="center"
     justify="center"
     elevation="large"
+    overflow="hidden"
   >
     <Box
       width={width}
       height={height}
-      margin={{
-        horizontal: '16px',
-        vertical: '64px',
-      }}
+      margin={
+        withFrame
+          ? {
+              horizontal: '16px',
+              vertical: '64px',
+            }
+          : {}
+      }
       background={{ color: 'light-1' }}
     >
       <Stack>

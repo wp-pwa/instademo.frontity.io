@@ -1,49 +1,86 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { observer } from 'mobx-react-lite';
-import { Link } from 'grommet-icons';
-import { grommet } from 'grommet/themes';
-import { Grommet, Heading, TextInput, Box, Button, Text } from 'grommet';
+// import { Link } from 'grommet-icons';
+import { base as theme } from 'grommet/themes';
+import {
+  Grommet,
+  TextInput,
+  Box,
+  Button,
+  Text,
+  FormField,
+  ThemeContext,
+} from 'grommet';
 
 import store from './store';
 import Demo from './components/Demo';
-import Status from './components/Status';
+import Icon from './components/Icon';
+import frontityTheme from './theme';
 
 const App = observer(() => (
-  <Grommet theme={grommet}>
-    <Box gap="large" align="center">
-      <Heading>Demo Generator</Heading>
-      <form onSubmit={store.getDemo}>
-        <Box gap="medium" align="start">
-          <Text>{store.message || 'Write the url below.'}</Text>
-          <TextInput
-            label="website url"
-            name="url"
-            type="url"
-            placeholder="https://myblog.com"
-            value={store.url}
-            onClick={store.reset}
-            onChange={store.onChangeUrl}
-            size="small"
-          />
-          <Box direction="row" gap="small">
-            <Button
-              label="get demo"
-              disabled={store.busy}
-              icon={<Status status={store.status} />}
-              type="submit"
-            />
-            <Button
-              label="get link"
-              onClick={store.copyDemoUrl}
-              disabled={store.status !== 'ok'}
-              icon={<Link size="medium" color="brand" />}
-            />
+  <Grommet theme={theme}>
+    <ThemeContext.Extend value={frontityTheme}>
+      <Box fill gap="large" justify="center" direction="row">
+        <Box gap="large" justify="start" direction="column" width="400px">
+          <form onSubmit={store.getDemo}>
+            <Box
+              gap="small"
+              pad="medium"
+              round="xsmall"
+              align="stretch"
+              elevation="small"
+              background="white"
+            >
+              <FormField label="WordPress URL" htmlFor="url-input">
+                <TextInput
+                  id="url-input"
+                  type="url"
+                  required
+                  placeholder="https://myblog.com"
+                  value={store.url}
+                  onChange={store.onChangeUrl}
+                  size="small"
+                />
+              </FormField>
+              <FormField label="Email" htmlFor="email-input">
+                <TextInput
+                  id="email-input"
+                  type="email"
+                  required
+                  placeholder="example@myblog.com"
+                  value={store.email}
+                  onChange={store.onChangeEmail}
+                  size="small"
+                />
+              </FormField>
+              <Box direction="row" gap="small">
+                <Button
+                  primary
+                  color="brand"
+                  round="xsmall"
+                  label="live demo"
+                  disabled={store.busy}
+                  icon={<Icon />}
+                  type="submit"
+                />
+              </Box>
+            </Box>
+          </form>
+          <Box
+            gap="small"
+            pad="medium"
+            round="xsmall"
+            align="stretch"
+            elevation="small"
+            background="white"
+          >
+            <Text>{store.message}</Text>
           </Box>
-          <Demo status={store.status} src={store.demoUrl} />
         </Box>
-      </form>
-    </Box>
+        <Demo status={store.status} src={store.demoUrl} />
+      </Box>
+    </ThemeContext.Extend>
   </Grommet>
 ));
 
