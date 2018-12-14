@@ -50,7 +50,7 @@ export default self => ({
       packageName: 'wp-org-connection',
       data: {
         cdn: {
-          media: `https://cdn.frontity.media/${self.url}`,
+          // media: `https://cdn.frontity.media/${self.url}`,
           api: `https://cdn.frontity.cloud/https://services.frontity.cloud/add-media-ids/${
             self.url
           }`,
