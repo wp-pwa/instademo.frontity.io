@@ -43,10 +43,7 @@ const Store = types
       // Not in database:
       // First, check if the url is a valid WordPress blog
       yield self.checkUrl();
-      if (self.status === 'error') {
-        self.showFallback();
-        return;
-      }
+      if (self.status === 'error') return;
 
       // Then, create the demo
       yield self.createDemo();
@@ -73,8 +70,9 @@ const Store = types
       self.message = 'Link copied!';
     },
     showFallback: () => {
-      const fallback = window.document.getElementById('fallback');
-      if (fallback) fallback.style.display = 'block';
+      self.url = 'https://blog.frontity.com';
+      self.setDemoUrl();
+      self.setStatus('ok', 'See other example');
     },
   }))
   .actions(api)

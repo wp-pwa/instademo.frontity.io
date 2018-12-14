@@ -68,7 +68,11 @@ const App = observer(() => (
         )}
       </Box>
       <Box margin="medium">
-        <Demo status={store.status} src={store.demoUrl} />
+        <Demo
+          status={store.status}
+          src={store.demoUrl}
+          showFallback={store.showFallback}
+        />
       </Box>
     </Box>
   </Grommet>

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Box, Stack } from 'grommet';
+import { Box, Stack, Text, Button } from 'grommet';
 import { InProgress } from 'grommet-icons';
 import styled from 'styled-components';
 
 const Demo = ({
   status,
   src,
+  showFallback,
   width = '360px',
   height = '640px',
   withFrame = false,
@@ -30,7 +31,7 @@ const Demo = ({
             }
           : {}
       }
-      background={{ color: 'light-1' }}
+      background={{ color: 'white' }}
     >
       <Stack>
         <Box width={width} height={height} align="center" justify="center">
@@ -43,6 +44,14 @@ const Demo = ({
         <Box width={width} height={height}>
           <Iframe src={status === 'ok' ? src : ''} />
         </Box>
+        {status === 'error' && (
+          <Box width={width} height={height} align="center" justify="center">
+            <Text>
+              If you want to see an example,{' '}
+              <Button onClick={showFallback}>click here</Button>
+            </Text>
+          </Box>
+        )}
       </Stack>
     </Box>
   </Box>
