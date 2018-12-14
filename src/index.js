@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { observer } from 'mobx-react-lite';
 import { Grommet, TextInput, Box, Button, FormField } from 'grommet';
-import QRCode from 'qrcode.react';
 
 import store from './store';
 import Demo from './components/Demo';
@@ -64,13 +63,8 @@ const App = observer(() => (
             </Box>
           </Box>
         </form>
-        {store.message && <InfoBox status={store.status} />}
-        {store.demoUrl && (
-          <Box align="center">
-            <Box background="white">
-              <QRCode value={store.demoUrl} />
-            </Box>
-          </Box>
+        {store.message && (
+          <InfoBox status={store.status} demoUrl={store.demoUrl} />
         )}
       </Box>
       <Box margin="medium">
