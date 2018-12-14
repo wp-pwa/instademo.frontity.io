@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { observer } from 'mobx-react-lite';
-import { Grommet, TextInput, Box, Button, Text, FormField } from 'grommet';
+import { Grommet, TextInput, Box, Button, FormField } from 'grommet';
 import QRCode from 'qrcode.react';
 
 import store from './store';
