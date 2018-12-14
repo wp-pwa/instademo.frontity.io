@@ -9,6 +9,7 @@ const staticServer = 'https://static.wp-pwa.com';
 const Store = types
   .model('Store', {
     url: '',
+    demoUrl: '',
     name: '',
     categories: types.array(types.frozen()),
     status: types.optional(
@@ -24,35 +25,44 @@ const Store = types
         .replace(/\/?$/, '')
         .replace(/[./]/g, '-')}`;
     },
-    get demoUrl() {
-      return `${ssrServer}/?siteId=${self.siteId}&static=${staticServer}`;
-    },
   }))
   .actions(self => ({
     getDemo: flow(function* getDemo(e) {
       e.preventDefault();
+      self.reset();
       self.setStatus('busy');
 
       // Search site in database
       const isCreated = yield self.isDemoCreated();
 
       if (isCreated) {
+        self.setDemoUrl();
         return self.setStatus('ok', 'Demo ready!');
       }
 
       // Not in database:
       // First, check if the url is a valid WordPress blog
       yield self.checkUrl();
-      if (self.status === 'error') return;
+      if (self.status === 'error') {
+        self.showFallback();
+        return;
+      }
 
       // Then, create the demo
       yield self.createDemo();
+      self.setDemoUrl();
     }),
     setStatus: (status, message = '') => {
       self.status = status;
       self.message = message;
     },
+    setDemoUrl() {
+      self.demoUrl = `${ssrServer}/?siteId=${
+        self.siteId
+      }&static=${staticServer}`;
+    },
     reset: () => {
+      self.demoUrl = '';
       self.name = '';
       self.categories = [];
       self.setStatus('idle', '');
@@ -61,6 +71,10 @@ const Store = types
     copyDemoUrl: () => {
       copy(self.demoUrl);
       self.message = 'Link copied!';
+    },
+    showFallback: () => {
+      const fallback = window.document.getElementById('fallback');
+      if (fallback) fallback.style.display = 'block';
     },
   }))
   .actions(api)
