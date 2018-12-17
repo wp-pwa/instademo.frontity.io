@@ -51,23 +51,23 @@ const InfoBox = ({ status, message, demoUrl }) => {
             <Text as="label">See how the demo looks in mobile</Text>
           </Box>
         ) : (
-          <>
-            <Paragraph size="small">
+          <Box gap="medium">
+            <Paragraph size="small" margin={{ vertical: '0' }}>
               We haven't been able to generate your demo, we will get back to
               you by <strong>email</strong> shortly
             </Paragraph>
-            <Paragraph size="small">
+            <Paragraph size="small" margin={{ vertical: '0' }}>
               Make sure your WordPress is a blog or news site. We only support
               sites using posts.
             </Paragraph>
-            <Paragraph size="small">
+            <Paragraph size="small" margin={{ vertical: '0' }}>
               You can visit{' '}
               <Anchor href="https://blog.frontity.com">
                 https://blog.frontity.com
               </Anchor>{' '}
               from a mobile phone to see fow Frontity works.
             </Paragraph>
-          </>
+          </Box>
         )}
       </Box>
     )
