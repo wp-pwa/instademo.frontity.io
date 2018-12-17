@@ -30,8 +30,6 @@ export default self => ({
       return self.setStatus('error', 'No category with posts.');
     }
 
-    console.log(categories);
-
     // Get the five categories with more posts
     self.categories = categories.sort((a, b) => b.count - a.count).slice(0, 5);
   }),

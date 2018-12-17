@@ -2,6 +2,8 @@ import React from 'react';
 import { Box, Stack, Text, Button } from 'grommet';
 import { InProgress } from 'grommet-icons';
 import styled from 'styled-components';
+import Icon from './Icon';
+import inject from './inject';
 
 const Demo = ({
   status,
@@ -46,10 +48,27 @@ const Demo = ({
         </Box>
         {status === 'error' && (
           <Box width={width} height={height} align="center" justify="center">
-            <Text>
-              If you want to see an example,{' '}
-              <Button onClick={showFallback}>click here</Button>
-            </Text>
+            <Text as="label">Use blog.frontity.com</Text>
+            <Box
+              round="small"
+              border={{
+                color: 'border',
+                size: 'small',
+              }}
+              pad={{
+                horizontal: '12px',
+                vertical: '6px',
+              }}
+              margin="large"
+            >
+              <Button
+                plain
+                color="white"
+                label="see live demo"
+                icon={<Icon />}
+                onClick={showFallback}
+              />
+            </Box>
           </Box>
         )}
       </Stack>
@@ -65,4 +84,11 @@ const Iframe = styled.iframe`
   height: 100%;
 `;
 
-export default Demo;
+export default inject(
+  ({ store }) => ({
+    status: store.status,
+    src: store.demoUrl,
+    showFallback: store.showFallback,
+  }),
+  Demo,
+);

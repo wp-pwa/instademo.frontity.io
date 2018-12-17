@@ -6,7 +6,7 @@ import database from './database-actions';
 const ssrServer = 'https://ssr.wp-pwa.com';
 const staticServer = 'https://static.wp-pwa.com';
 
-const Store = types
+export default types
   .model('Store', {
     url: '',
     demoUrl: '',
@@ -76,8 +76,5 @@ const Store = types
     },
   }))
   .actions(api)
-  .actions(database);
-
-const store = Store.create({});
-
-export default store;
+  .actions(database)
+  .create({});

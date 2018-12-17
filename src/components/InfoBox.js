@@ -2,8 +2,9 @@ import React from 'react';
 import { Box, Text } from 'grommet';
 import { StatusInfo, StatusGood, StatusWarning } from 'grommet-icons';
 import QRCode from 'qrcode.react';
-
 import styled from 'styled-components';
+
+import inject from './inject';
 
 const InfoBox = ({ status, demoUrl }) => (
   <Box
@@ -36,7 +37,13 @@ const InfoBox = ({ status, demoUrl }) => (
   </Box>
 );
 
-export default InfoBox;
+export default inject(
+  ({ store }) => ({
+    status: store.status,
+    demoUrl: store.demoUrl,
+  }),
+  InfoBox,
+);
 
 const Opacity = styled.div`
   opacity: ${({ value = 1 }) => value};
