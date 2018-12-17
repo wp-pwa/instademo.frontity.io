@@ -9,6 +9,9 @@ export default {
       'accent-2': '#1f38c5',
       'accent-3': '#1f38c5',
       'accent-4': '#1f38c5',
+      'status-ok': '#7dd72d',
+      'status-error': '#ea5a35',
+      focus: 'rgba(31, 56, 197, 0.24)',
     },
     font: {
       family: 'Poppins, sans-serif',

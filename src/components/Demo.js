@@ -39,7 +39,7 @@ const Demo = ({
         <Box width={width} height={height} align="center" justify="center">
           {status === 'ok' && (
             <Box animation="fadeIn">
-              <InProgress size="large" color="brand" />
+              <InProgress size="large" color="status-unknown" />
             </Box>
           )}
         </Box>

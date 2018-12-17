@@ -11,7 +11,7 @@ const App = () => (
         gap="large"
         justify="start"
         direction="column"
-        width="400px"
+        width="450px"
         margin="medium"
       >
         <Form />

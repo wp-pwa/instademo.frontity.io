@@ -7,7 +7,7 @@ const Form = ({ getDemo, url, onChangeUrl, email, onChangeEmail, busy }) => (
   <form onSubmit={getDemo}>
     <Box
       gap="small"
-      pad={{ vertical: 'medium', horizontal: 'large' }}
+      pad="40px"
       round="xsmall"
       align="stretch"
       elevation="small"
