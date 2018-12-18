@@ -1,8 +1,9 @@
 import React from 'react';
 import { Box, Stack, Text, Button } from 'grommet';
-import { InProgress } from 'grommet-icons';
+// import { InProgress } from 'grommet-icons';
 import styled from 'styled-components';
 import Icon from './Icon';
+import Spinner from './Spinner';
 import inject from './inject';
 
 const Demo = ({
@@ -37,11 +38,9 @@ const Demo = ({
     >
       <Stack>
         <Box width={width} height={height} align="center" justify="center">
-          {status === 'ok' && (
-            <Box animation="fadeIn">
-              <InProgress size="large" color="status-unknown" />
-            </Box>
-          )}
+          <Box animation="fadeIn">
+            <Spinner />
+          </Box>
         </Box>
         <Box width={width} height={height}>
           <Iframe src={status === 'ok' ? src : ''} />
