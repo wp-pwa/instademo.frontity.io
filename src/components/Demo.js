@@ -38,13 +38,23 @@ const Demo = ({
     >
       <Stack>
         <Box width={width} height={height} align="center" justify="center">
-          <Box animation="fadeIn">
-            <Spinner />
-          </Box>
+          {(status === 'busy' || status === 'ok') && (
+            <Box animation="fadeIn">
+              <Spinner />
+            </Box>
+          )}
         </Box>
         <Box width={width} height={height}>
           <Iframe src={status === 'ok' ? src : ''} />
         </Box>
+        {status === 'idle' && (
+          <Box width={width} height={height} align="center" justify="center">
+            <Text as="label" textAlign="center" margin="large">
+              Please enter your email address and site's URL to view your
+              instant demo here
+            </Text>
+          </Box>
+        )}
         {status === 'error' && (
           <Box width={width} height={height} align="center" justify="center">
             <Text as="label">Use blog.frontity.com</Text>
