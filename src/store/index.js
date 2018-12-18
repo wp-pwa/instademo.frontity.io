@@ -1,7 +1,8 @@
 import { types, flow } from 'mobx-state-tree';
-import copy from 'copy-text-to-clipboard';
 import api from './api-actions';
 import database from './database-actions';
+
+import { isWordPress, hasPosts, hasCategories, gettingDemo } from './statuses';
 
 const ssrServer = 'https://ssr.wp-pwa.com';
 const staticServer = 'https://static.wp-pwa.com';
@@ -12,11 +13,7 @@ export default types
     demoUrl: '',
     name: '',
     categories: types.array(types.frozen()),
-    status: types.optional(
-      types.enumeration(['idle', 'busy', 'ok', 'error']),
-      'idle',
-    ),
-    message: '',
+    statuses: types.map(types.enumeration(['idle', 'busy', 'ok', 'error'])),
   })
   .views(self => ({
     get siteId() {
@@ -25,22 +22,38 @@ export default types
         .replace(/\/?$/, '')
         .replace(/[./]/g, '-')}`;
     },
+    get status() {
+      const statusArray = Array.from(self.statuses.values());
+
+      if (!statusArray.length) return 'idle';
+
+      if (statusArray.some(status => status === 'error')) {
+        return 'error';
+      } else if (statusArray.every(status => status === 'ok')) {
+        return 'ok';
+      } else if (statusArray.every(status => status === 'idle')) {
+        return 'idle';
+      }
+      return 'busy';
+    },
   }))
   .actions(self => ({
     getDemo: flow(function* getDemo(e) {
-      e.preventDefault();
+      if (e) e.preventDefault();
       self.reset();
-      self.setStatus('busy');
 
       // Search site in database
       const isCreated = yield self.isDemoCreated();
 
       if (isCreated) {
         self.setDemoUrl();
-        return self.setStatus('ok', 'Demo ready!');
+        self.setStatus(isWordPress, 'ok');
+        self.setStatus(hasPosts, 'ok');
+        self.setStatus(hasCategories, 'ok');
+        self.setStatus(gettingDemo, 'ok');
+        return;
       }
 
-      // Not in database:
       // First, check if the url is a valid WordPress blog
       yield self.checkUrl();
       if (self.status === 'error') return;
@@ -49,9 +62,8 @@ export default types
       yield self.createDemo();
       self.setDemoUrl();
     }),
-    setStatus: (status, message = '') => {
-      self.status = status;
-      self.message = message;
+    setStatus: (name, status) => {
+      self.statuses.set(name, status);
     },
     setDemoUrl() {
       self.demoUrl = `${ssrServer}/?siteId=${
@@ -62,17 +74,15 @@ export default types
       self.demoUrl = '';
       self.name = '';
       self.categories = [];
-      self.setStatus('idle', '');
+      self.setStatus(isWordPress, 'idle');
+      self.setStatus(hasPosts, 'idle');
+      self.setStatus(hasCategories, 'idle');
+      self.setStatus(gettingDemo, 'idle');
     },
     onChangeUrl: event => (self.url = event.target.value),
-    copyDemoUrl: () => {
-      copy(self.demoUrl);
-      self.message = 'Link copied!';
-    },
     showFallback: () => {
       self.url = 'https://blog.frontity.com';
-      self.setDemoUrl();
-      self.setStatus('ok', 'See other example');
+      self.getDemo();
     },
   }))
   .actions(api)
