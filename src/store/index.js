@@ -42,6 +42,8 @@ export default types
       if (e) e.preventDefault();
       self.reset();
 
+      self.setStatus(gettingDemo, 'busy');
+
       // Search site in database
       const isCreated = yield self.isDemoCreated();
 
@@ -61,6 +63,8 @@ export default types
       // Then, create the demo
       yield self.createDemo();
       self.setDemoUrl();
+
+      self.setStatus(gettingDemo, 'ok');
     }),
     setStatus: (name, status) => {
       self.statuses.set(name, status);

@@ -2,8 +2,6 @@ import { flow } from 'mobx-state-tree';
 import { decode } from 'he';
 import client from '../graphql/client';
 
-import { gettingDemo } from './statuses';
-
 export default self => ({
   isDemoCreated: flow(function* getDemo() {
     // Search site in database
@@ -18,7 +16,6 @@ export default self => ({
     return !!allSites.length;
   }),
   createDemo: flow(function* createDemo() {
-    self.setStatus(gettingDemo, 'busy');
     // Set theme settings
     const themeSettings = {
       packageName: 'saturn-theme',
@@ -73,7 +70,5 @@ export default self => ({
         siteId
       }
     }`);
-
-    self.setStatus(gettingDemo, 'ok');
   }),
 });
