@@ -20,7 +20,7 @@ const InfoBox = ({ status, message, demoUrl }) => {
   } else if (status === 'error') {
     StatusIcon = StatusWarning;
     color = 'status-error';
-    info = "We haven't been able to generate your live demo.";
+    info = 'Oops! something went wrong';
   }
 
   return (
@@ -48,7 +48,10 @@ const InfoBox = ({ status, message, demoUrl }) => {
                 <QRCode value={demoUrl || 'DEMO'} />
               </Opacity>
             </Box>
-            <Text as="label">See how the demo looks in mobile</Text>
+            <Text as="label">
+              Scan QR code to view this demo on your mobile phone and discover
+              more features
+            </Text>
           </Box>
         ) : (
           <Box gap="medium">
@@ -57,15 +60,16 @@ const InfoBox = ({ status, message, demoUrl }) => {
               you by <strong>email</strong> shortly
             </Paragraph>
             <Paragraph size="small" margin={{ vertical: '0' }}>
-              Make sure your WordPress is a blog or news site. We only support
-              sites using posts.
+              Make sure your WordPress is a <strong>blog</strong> or{' '}
+              <strong>news</strong> site. We only support sites using
+              posts/pages.
             </Paragraph>
             <Paragraph size="small" margin={{ vertical: '0' }}>
-              You can visit{' '}
+              In the meantime, you can visit{' '}
               <Anchor href="https://blog.frontity.com">
                 https://blog.frontity.com
               </Anchor>{' '}
-              from a mobile phone to see fow Frontity works.
+              from a mobile phone to see our PWA theme in action.
             </Paragraph>
           </Box>
         )}

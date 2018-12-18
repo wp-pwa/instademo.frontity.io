@@ -40,7 +40,7 @@ const Form = ({ getDemo, url, onChangeUrl, email, onChangeEmail, busy }) => (
           primary
           color="brand"
           round="xsmall"
-          label="live demo"
+          label="view instant demo"
           disabled={busy}
           icon={<Icon />}
           type="submit"
