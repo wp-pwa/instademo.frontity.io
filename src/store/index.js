@@ -1,7 +1,8 @@
 import { types, flow } from 'mobx-state-tree';
+import request from 'superagent';
+
 import api from './api-actions';
 import database from './database-actions';
-
 import tasks from './tasks';
 
 const ssrServer = 'https://ssr.wp-pwa.com';
@@ -61,12 +62,20 @@ export default types
         self.setDemoUrl();
       }
 
-      console.log({
-        url: self.url,
+      const result = {
+        source: 'demo',
+        wpUrl: self.url,
         email: self.email,
         status: self.status,
         error: self.error,
-      });
+      };
+
+      console.log(result);
+
+      // Send data to integromat
+      yield request
+        .post('https://hook.integromat.com/9jvf2oiladaib7wbb9k75odshqw6bork')
+        .query(result);
     }),
     setStatus: (name, status, error) => {
       self.statuses.set(name, status);
