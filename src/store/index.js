@@ -62,6 +62,14 @@ export default types
         }
       }
 
+      // Log useful info
+      console.log({
+        status: self.status,
+        statuses: [...self.statuses.entries()],
+        error: self.error,
+      });
+
+      // Send data to integromat
       const result = {
         source: 'demo',
         wpUrl: self.url,
@@ -69,10 +77,6 @@ export default types
         status: self.status,
         error: self.error,
       };
-
-      console.log(result);
-
-      // Send data to integromat
       yield request
         .post('https://hook.integromat.com/9jvf2oiladaib7wbb9k75odshqw6bork')
         .query(result);
