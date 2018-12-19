@@ -57,7 +57,7 @@ const Demo = ({
         )}
         {status === 'error' && (
           <Box width={width} height={height} align="center" justify="center">
-            <Text as="label">Use blog.frontity.com</Text>
+            <Text as="div">Use blog.frontity.com</Text>
             <Box
               round="small"
               border={{
@@ -73,7 +73,7 @@ const Demo = ({
               <Button
                 plain
                 color="white"
-                label="see live demo"
+                label="see our blog"
                 icon={<Icon />}
                 onClick={showFallback}
               />
