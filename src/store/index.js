@@ -2,7 +2,7 @@ import { types, flow } from 'mobx-state-tree';
 import api from './api-actions';
 import database from './database-actions';
 
-import { isWordPress, hasPosts, hasCategories, gettingDemo } from './statuses';
+import tasks from './tasks';
 
 const ssrServer = 'https://ssr.wp-pwa.com';
 const staticServer = 'https://static.wp-pwa.com';
@@ -10,10 +10,12 @@ const staticServer = 'https://static.wp-pwa.com';
 export default types
   .model('Store', {
     url: '',
+    email: '',
     demoUrl: '',
     name: '',
     categories: types.array(types.frozen()),
     statuses: types.map(types.enumeration(['idle', 'busy', 'ok', 'error'])),
+    error: '',
   })
   .views(self => ({
     get siteId() {
@@ -42,32 +44,33 @@ export default types
       if (e) e.preventDefault();
       self.reset();
 
-      self.setStatus(gettingDemo, 'busy');
-
       // Search site in database
       const isCreated = yield self.isDemoCreated();
 
       if (isCreated) {
         self.setDemoUrl();
-        self.setStatus(isWordPress, 'ok');
-        self.setStatus(hasPosts, 'ok');
-        self.setStatus(hasCategories, 'ok');
-        self.setStatus(gettingDemo, 'ok');
+        self.statuses.forEach((_, key, map) => map.set(key, 'ok'));
         return;
       }
 
       // First, check if the url is a valid WordPress blog
-      yield self.checkUrl();
-      if (self.status === 'error') return;
+      yield self.runTasks();
+      if (self.status !== 'error') {
+        // Then, create the demo
+        yield self.createDemo();
+        self.setDemoUrl();
+      }
 
-      // Then, create the demo
-      yield self.createDemo();
-      self.setDemoUrl();
-
-      self.setStatus(gettingDemo, 'ok');
+      console.log({
+        url: self.url,
+        email: self.email,
+        status: self.status,
+        error: self.error,
+      });
     }),
-    setStatus: (name, status) => {
+    setStatus: (name, status, error) => {
       self.statuses.set(name, status);
+      if (error) self.error = error;
     },
     setDemoUrl() {
       self.demoUrl = `${ssrServer}/?siteId=${
@@ -78,12 +81,13 @@ export default types
       self.demoUrl = '';
       self.name = '';
       self.categories = [];
-      self.setStatus(isWordPress, 'idle');
-      self.setStatus(hasPosts, 'idle');
-      self.setStatus(hasCategories, 'idle');
-      self.setStatus(gettingDemo, 'idle');
+      self.error = '';
+
+      self.statuses.clear();
+      tasks.forEach(({ name }) => self.statuses.set(name, 'idle'));
     },
     onChangeUrl: event => (self.url = event.target.value),
+    onChangeEmail: event => (self.email = event.target.value),
     showFallback: () => {
       self.url = 'https://blog.frontity.com';
       self.getDemo();
