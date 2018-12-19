@@ -51,15 +51,14 @@ export default types
       if (isCreated) {
         self.setDemoUrl();
         self.statuses.forEach((_, key, map) => map.set(key, 'ok'));
-        return;
-      }
-
-      // First, check if the url is a valid WordPress blog
-      yield self.runTasks();
-      if (self.status !== 'error') {
-        // Then, create the demo
-        yield self.createDemo();
-        self.setDemoUrl();
+      } else {
+        // First, check if the url is a valid WordPress blog
+        yield self.runTasks();
+        if (self.status !== 'error') {
+          // Then, create the demo
+          yield self.createDemo();
+          self.setDemoUrl();
+        }
       }
 
       const result = {
