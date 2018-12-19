@@ -20,6 +20,7 @@ export default types
   })
   .views(self => ({
     get siteId() {
+      if (self.url === 'https://blog.frontity.com') return 'PHAzpvws5pvZw7XuW';
       return `demo-${self.url
         .replace(/^https?:\/\//, '')
         .replace(/\/?$/, '')
@@ -50,7 +51,7 @@ export default types
 
       if (isCreated) {
         self.setDemoUrl();
-        self.statuses.forEach((_, key, map) => map.set(key, 'ok'));
+        self.setAllStatus('ok');
       } else {
         // First, check if the url is a valid WordPress blog
         yield self.runTasks();
@@ -79,6 +80,9 @@ export default types
     setStatus: (name, status, error) => {
       self.statuses.set(name, status);
       if (error) self.error = error;
+    },
+    setAllStatus: status => {
+      self.statuses.forEach((_, key, map) => map.set(key, status));
     },
     setDemoUrl() {
       self.demoUrl = `${ssrServer}/?siteId=${
