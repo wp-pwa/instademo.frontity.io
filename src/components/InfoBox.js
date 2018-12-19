@@ -7,8 +7,6 @@ import styled from 'styled-components';
 import Status from './Status';
 import inject from './inject';
 
-import { isWordPress, hasPosts, gettingDemo } from '../store/statuses';
-
 const InfoBox = ({ status, statusWP, statusPosts, statusDemo, demoUrl }) =>
   status !== 'idle' && (
     <Box
@@ -21,9 +19,12 @@ const InfoBox = ({ status, statusWP, statusPosts, statusDemo, demoUrl }) =>
     >
       {status !== 'error' ? (
         <Box align="start" gap="small">
-          <Status name={isWordPress} status={statusWP} />
-          <Status name={hasPosts} status={statusPosts} />
-          <Status name={gettingDemo} status={statusDemo} />
+          <Status
+            name="Connecting with your WordPress site"
+            status={statusWP}
+          />
+          <Status name="Collecting latest posts" status={statusPosts} />
+          <Status name="Generating your live demo" status={statusDemo} />
         </Box>
       ) : (
         <Status name="Oops! Something went wrong" status="error" />
@@ -65,9 +66,9 @@ const InfoBox = ({ status, statusWP, statusPosts, statusDemo, demoUrl }) =>
 export default inject(
   ({ store }) => ({
     status: store.status,
-    statusWP: store.statuses.get(isWordPress),
-    statusPosts: store.statuses.get(hasPosts),
-    statusDemo: store.statuses.get(gettingDemo),
+    statusWP: store.statuses.get('isWordPress'),
+    statusPosts: store.statuses.get('hasPosts'),
+    statusDemo: store.status,
     demoUrl: store.demoUrl,
   }),
   InfoBox,
