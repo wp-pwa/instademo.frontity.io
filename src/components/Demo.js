@@ -49,9 +49,9 @@ const Demo = ({
         </Box>
         {status === 'idle' && (
           <Box width={width} height={height} align="center" justify="center">
-            <Text as="label" textAlign="center" margin="large">
-              Please enter your email address and site's URL to view your
-              instant demo here
+            <Text as="div" textAlign="center" margin="large">
+              Enter your email address and site's URL to view your instant demo
+              here.
             </Text>
           </Box>
         )}
