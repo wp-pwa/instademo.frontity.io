@@ -6,8 +6,6 @@ const taskActions = tasks.reduce((actions, task) => {
   return actions;
 }, {});
 
-console.log(taskActions);
-
 export default self => ({
   runTasks: flow(function* checkAPI() {
     try {
