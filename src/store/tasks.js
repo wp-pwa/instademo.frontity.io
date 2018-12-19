@@ -2,16 +2,18 @@ import { flow } from 'mobx-state-tree';
 import request from 'superagent';
 import { decode } from 'he';
 
-const proxy = 'https://cdn.frontity.cloud';
+const proxy = 'https://cdn.frontity.cloud/';
 
 export default [
   {
     name: 'isUrlAccessible',
     func: flow(function* isUrlAccessible(self) {
       try {
-        yield request(`${proxy}/${self.url}`).accept('text/html');
+        yield request(`${proxy}${self.url}`)
+          .accept('text/html')
+          .timeout({ response: 10000 });
       } catch (error) {
-        return 'URL is inaccessible';
+        return errorInfo('Error accessing URL', error);
       }
     }),
   },
@@ -20,10 +22,10 @@ export default [
     func: flow(function* isWordPress(self) {
       try {
         const wp = yield apiGet(self.url, '/');
+        if (!wp) return 'Empty response from "?rest_route=/"';
         self.name = decode(wp.name);
       } catch (error) {
-        console.log({ ...error });
-        return 'Error accessing API';
+        return errorInfo('Error accessing "?rest_route=/"', error);
       }
     }),
   },
@@ -35,8 +37,7 @@ export default [
         const posts = yield apiGet(self.url, '/wp/v2/posts');
         if (!(posts && posts.length)) return 'No posts';
       } catch (error) {
-        const info = getErrorInfo(error);
-        return `Error getting posts${info && `: ${info}`}`;
+        return errorInfo('Error getting posts', error);
       }
     }),
   },
@@ -56,8 +57,7 @@ export default [
           .sort((a, b) => b.count - a.count)
           .slice(0, 5);
       } catch (error) {
-        const info = getErrorInfo(error);
-        return `Error getting categories${info && `: ${info}`}`;
+        return errorInfo('Error getting categories', error);
       }
     }),
   },
@@ -66,13 +66,20 @@ export default [
 const apiGet = async (wpUrl, endpoint, query) => {
   const restRoute = `${endpoint}${query ? `&${query}` : ''}`;
   const { body } = await request
-    .get(`${proxy}/${wpUrl}/?rest_route=${restRoute}`)
+    .get(`${proxy}${wpUrl}/?rest_route=${restRoute}`)
     .accept('application/json')
-    .timeout({ response: 15000 });
+    .timeout({ response: 10000 });
   return body;
 };
 
-const getErrorInfo = error => {
-  if (error.parse) return 'invalid response type';
-  if (error.timeout) return 'timeout';
+const errorInfo = (message, error) => {
+  let info = '';
+  if (error.parse) info = 'invalid response type';
+  else if (error.timeout) info = 'timeout';
+  else if (error.crossDomain) info = 'cross domain';
+  else if (error.unauthorized) info = 'unauthorized';
+  else if (error.notAcceptable) info = 'not acceptable';
+  else if (error.notFound) info = 'not found';
+  else if (error.forbidden) info = 'forbidden';
+  return info ? `${message}: ${info}` : message;
 };
