@@ -17,6 +17,7 @@ const Form = ({ getDemo, url, onChangeUrl, email, onChangeEmail, busy }) => (
         <TextInput
           id="url-input"
           type="url"
+          pattern="^http(s)?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
           required
           placeholder="https://myblog.com"
           value={url}
@@ -28,6 +29,7 @@ const Form = ({ getDemo, url, onChangeUrl, email, onChangeEmail, busy }) => (
         <TextInput
           id="email-input"
           type="email"
+          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
           required
           placeholder="example@myblog.com"
           value={email}
