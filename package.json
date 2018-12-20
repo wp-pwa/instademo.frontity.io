@@ -13,7 +13,6 @@
   "bugs": {
     "url": "https://github.com/frontity/autodemos/issues"
   },
-  "homepage": "https://github.com/frontity/autodemos#readme",
   "main": "src/index.js",
   "dependencies": {
     "@babel/core": "7.1.0",
