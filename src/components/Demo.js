@@ -1,40 +1,85 @@
 import React from 'react';
-import { Box, Stack } from 'grommet';
-import { InProgress } from 'grommet-icons';
+import { Box, Stack, Text, Button } from 'grommet';
+// import { InProgress } from 'grommet-icons';
 import styled from 'styled-components';
+import Icon from './Icon';
+import Spinner from './Spinner';
+import inject from './inject';
 
-const width = '320px';
-const height = '568px';
-
-const Demo = ({ status, src }) => (
+const Demo = ({
+  status,
+  src,
+  showFallback,
+  width = '360px',
+  height = '640px',
+  withFrame = false,
+}) => (
   <Box
     background={{ color: 'brand' }}
     gap="large"
-    round="large"
+    round={withFrame ? 'large' : 'xsmall'}
     align="center"
     justify="center"
     elevation="large"
+    overflow="hidden"
   >
     <Box
       width={width}
       height={height}
-      margin={{
-        horizontal: '16px',
-        vertical: '64px',
-      }}
-      background={{ color: 'light-1' }}
+      margin={
+        withFrame
+          ? {
+              horizontal: '16px',
+              vertical: '64px',
+            }
+          : {}
+      }
+      background={{ color: 'white' }}
     >
       <Stack>
         <Box width={width} height={height} align="center" justify="center">
-          {status === 'ok' && (
+          {(status === 'busy' || status === 'ok') && (
             <Box animation="fadeIn">
-              <InProgress size="large" color="brand" />
+              <Spinner />
             </Box>
           )}
         </Box>
         <Box width={width} height={height}>
           <Iframe src={status === 'ok' ? src : ''} />
         </Box>
+        {status === 'idle' && (
+          <Box width={width} height={height} align="center" justify="center">
+            <Text as="div" textAlign="center" margin="large">
+              Enter your email address and site's URL to view your instant demo
+              here.
+            </Text>
+          </Box>
+        )}
+        {status === 'error' && (
+          <Box width={width} height={height} align="center" justify="center">
+            <Text as="div">Use blog.frontity.com</Text>
+            <Box
+              round="small"
+              border={{
+                color: 'border',
+                size: 'small',
+              }}
+              pad={{
+                horizontal: '12px',
+                vertical: '6px',
+              }}
+              margin="large"
+            >
+              <Button
+                plain
+                color="white"
+                label="see our blog"
+                icon={<Icon />}
+                onClick={showFallback}
+              />
+            </Box>
+          </Box>
+        )}
       </Stack>
     </Box>
   </Box>
@@ -48,4 +93,11 @@ const Iframe = styled.iframe`
   height: 100%;
 `;
 
-export default Demo;
+export default inject(
+  ({ store }) => ({
+    status: store.status,
+    src: store.demoUrl,
+    showFallback: store.showFallback,
+  }),
+  Demo,
+);

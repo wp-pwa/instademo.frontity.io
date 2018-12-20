@@ -1,19 +1,27 @@
 import React from 'react';
+import { Box, Text } from 'grommet';
 import { StatusGoodSmall as Icon } from 'grommet-icons';
 
-const Status = ({ status }) => {
+const Status = ({ name, status }) => {
   let color;
-  if (status === 'busy') {
-    color = 'status-warning';
-  } else if (status === 'ok') {
+  if (status === 'ok') {
     color = 'status-ok';
   } else if (status === 'error') {
     color = 'status-error';
   } else {
-    color = 'brand';
+    color = 'status-unknown';
   }
 
-  return <Icon size="medium" color={color} />;
+  return (
+    <Box direction="row" gap="small" align="center">
+      <Box>
+        <Icon size="20px" color={color} />
+      </Box>
+      <Text weight={600} size="small" color={color}>
+        {name}
+      </Text>
+    </Box>
+  );
 };
 
 export default Status;

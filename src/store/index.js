@@ -1,71 +1,114 @@
 import { types, flow } from 'mobx-state-tree';
-import copy from 'copy-text-to-clipboard';
+import request from 'superagent';
+
 import api from './api-actions';
 import database from './database-actions';
+import tasks from './tasks';
 
 const ssrServer = 'https://ssr.wp-pwa.com';
 const staticServer = 'https://static.wp-pwa.com';
 
-const Store = types
+export default types
   .model('Store', {
     url: '',
+    email: '',
+    demoUrl: '',
     name: '',
     categories: types.array(types.frozen()),
-    status: types.optional(
-      types.enumeration(['idle', 'busy', 'ok', 'error']),
-      'idle',
-    ),
-    message: '',
+    statuses: types.map(types.enumeration(['idle', 'busy', 'ok', 'error'])),
+    error: '',
   })
   .views(self => ({
     get siteId() {
+      if (self.url === 'https://blog.frontity.com') return 'PHAzpvws5pvZw7XuW';
       return `demo-${self.url
         .replace(/^https?:\/\//, '')
         .replace(/\/?$/, '')
         .replace(/[./]/g, '-')}`;
     },
-    get demoUrl() {
-      return `${ssrServer}/?siteId=${self.siteId}&static=${staticServer}`;
+    get status() {
+      const statusArray = Array.from(self.statuses.values());
+
+      if (!statusArray.length) return 'idle';
+
+      if (statusArray.some(status => status === 'error')) {
+        return 'error';
+      } else if (statusArray.every(status => status === 'ok')) {
+        return 'ok';
+      } else if (statusArray.every(status => status === 'idle')) {
+        return 'idle';
+      }
+      return 'busy';
     },
   }))
   .actions(self => ({
     getDemo: flow(function* getDemo(e) {
-      e.preventDefault();
-      self.setStatus('busy');
+      if (e) e.preventDefault();
+      self.reset();
 
       // Search site in database
       const isCreated = yield self.isDemoCreated();
 
       if (isCreated) {
-        return self.setStatus('ok', 'Demo ready!');
+        self.setDemoUrl();
+        self.setAllStatus('ok');
+      } else {
+        // First, check if the url is a valid WordPress blog
+        yield self.runTasks();
+        if (self.status !== 'error') {
+          // Then, create the demo
+          yield self.createDemo();
+          self.setDemoUrl();
+        }
       }
 
-      // Not in database:
-      // First, check if the url is a valid WordPress blog
-      yield self.checkUrl();
-      if (self.status === 'error') return;
+      // Log useful info
+      console.log({
+        status: self.status,
+        statuses: [...self.statuses.entries()],
+        error: self.error,
+      });
 
-      // Then, create the demo
-      yield self.createDemo();
+      // Send data to integromat
+      const result = {
+        source: 'demo',
+        wpUrl: self.url,
+        email: self.email,
+        status: self.status,
+        error: self.error,
+      };
+      yield request
+        .post('https://hook.integromat.com/9jvf2oiladaib7wbb9k75odshqw6bork')
+        .query(result);
     }),
-    setStatus: (status, message = '') => {
-      self.status = status;
-      self.message = message;
+    setStatus: (name, status, error) => {
+      self.statuses.set(name, status);
+      if (error) self.error = error;
+    },
+    setAllStatus: status => {
+      self.statuses.forEach((_, key, map) => map.set(key, status));
+    },
+    setDemoUrl() {
+      self.demoUrl = `${ssrServer}/?siteId=${
+        self.siteId
+      }&static=${staticServer}`;
     },
     reset: () => {
+      self.demoUrl = '';
       self.name = '';
       self.categories = [];
-      self.setStatus('idle', '');
+      self.error = '';
+
+      self.statuses.clear();
+      tasks.forEach(({ name }) => self.statuses.set(name, 'idle'));
     },
     onChangeUrl: event => (self.url = event.target.value),
-    copyDemoUrl: () => {
-      copy(self.demoUrl);
-      self.message = 'Link copied!';
+    onChangeEmail: event => (self.email = event.target.value),
+    showFallback: () => {
+      self.url = 'https://blog.frontity.com';
+      self.getDemo();
     },
   }))
   .actions(api)
-  .actions(database);
-
-const store = Store.create({});
-
-export default store;
+  .actions(database)
+  .create({});
