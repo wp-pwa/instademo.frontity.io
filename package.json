@@ -1,6 +1,6 @@
 {
   "name": "autodemos",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Demo generator to preview Frontity with your blog",
   "keywords": [],
