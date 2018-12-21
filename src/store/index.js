@@ -1,9 +1,8 @@
 import { types, flow } from 'mobx-state-tree';
 import request from 'superagent';
 
-import api from './api-actions';
-import database from './database-actions';
-import tasks from './tasks';
+import databaseActions from './database-actions';
+import { actions as taskActions, taskList } from './tasks';
 
 const ssrServer = 'https://ssr.wp-pwa.com';
 const staticServer = 'https://static.wp-pwa.com';
@@ -15,7 +14,7 @@ export default types
     demoUrl: '',
     name: '',
     categories: types.array(types.frozen()),
-    statuses: types.map(types.enumeration(['idle', 'busy', 'ok', 'error'])),
+    taskStatus: types.map(types.enumeration(['idle', 'busy', 'ok', 'error'])),
     error: '',
   })
   .views(self => ({
@@ -27,7 +26,7 @@ export default types
         .replace(/[./]/g, '-')}`;
     },
     get status() {
-      const statusArray = Array.from(self.statuses.values());
+      const statusArray = Array.from(self.taskStatus.values());
 
       if (!statusArray.length) return 'idle';
 
@@ -65,7 +64,7 @@ export default types
       // Log useful info
       console.log({
         status: self.status,
-        statuses: [...self.statuses.entries()],
+        taskStatus: [...self.taskStatus.entries()],
         error: self.error,
       });
 
@@ -82,11 +81,11 @@ export default types
         .query(result);
     }),
     setStatus: (name, status, error) => {
-      self.statuses.set(name, status);
+      self.taskStatus.set(name, status);
       if (error) self.error = error;
     },
     setAllStatus: status => {
-      self.statuses.forEach((_, key, map) => map.set(key, status));
+      self.taskStatus.forEach((_, key, map) => map.set(key, status));
     },
     setDemoUrl() {
       self.demoUrl = `${ssrServer}/?siteId=${
@@ -99,16 +98,18 @@ export default types
       self.categories = [];
       self.error = '';
 
-      self.statuses.clear();
-      tasks.forEach(({ name }) => self.statuses.set(name, 'idle'));
+      self.taskStatus.clear();
+      taskList.forEach(name => self.taskStatus.set(name, 'idle'));
     },
     onChangeUrl: event => (self.url = event.target.value),
     onChangeEmail: event => (self.email = event.target.value),
+    onIframeLoad: () => {},
+    onIframeError: () => {},
     showFallback: () => {
       self.url = 'https://blog.frontity.com';
       self.getDemo();
     },
   }))
-  .actions(api)
-  .actions(database)
+  .actions(taskActions)
+  .actions(databaseActions)
   .create({});
