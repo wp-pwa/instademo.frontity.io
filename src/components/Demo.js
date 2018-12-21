@@ -10,6 +10,7 @@ const Demo = ({
   status,
   src,
   showFallback,
+  iframeOnLoad,
   width = '360px',
   height = '640px',
   withFrame = false,
@@ -45,7 +46,10 @@ const Demo = ({
           )}
         </Box>
         <Box width={width} height={height}>
-          <Iframe src={status === 'ok' ? src : ''} />
+          <Iframe
+            src={status === 'busy' || status === 'ok' ? src : ''}
+            onLoad={iframeOnLoad}
+          />
         </Box>
         {status === 'idle' && (
           <Box width={width} height={height} align="center" justify="center">
@@ -95,9 +99,10 @@ const Iframe = styled.iframe`
 
 export default inject(
   ({ store }) => ({
-    status: store.status,
+    status: store.statusList.get('hasIframeLoaded'),
     src: store.demoUrl,
     showFallback: store.showFallback,
+    iframeOnLoad: store.iframeOnLoad,
   }),
   Demo,
 );

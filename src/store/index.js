@@ -1,4 +1,5 @@
 import { types, flow } from 'mobx-state-tree';
+import { when } from 'mobx';
 import request from 'superagent';
 
 import databaseActions from './database-actions';
@@ -58,14 +59,25 @@ export default types
       const isCreated = yield self.isDemoCreated();
 
       if (isCreated) {
-        self.setDemoUrl();
-        self.setAllStatus('ok');
+        self.taskList.forEach(name => self.setStatus(name, 'ok'));
+        console.log([...self.statusList.entries()], self.demoUrl);
       } else {
         yield self.runTasks();
-        if (self.status !== 'error') {
-          self.setDemoUrl();
-        }
       }
+
+      if (self.status !== 'error') self.setDemoUrl();
+
+      // Wait for iframe load or error
+      self.setStatus('hasIframeLoaded', 'busy');
+      const countdown = setTimeout(
+        () => self.iframeOnError(),
+        10000, // error after 10 seconds
+      );
+
+      yield when(() =>
+        ['ok', 'error'].includes(self.statusList.get('hasIframeLoaded')),
+      );
+      clearTimeout(countdown);
 
       // Log useful info
       console.log({
@@ -103,21 +115,26 @@ export default types
       self.name = '';
       self.categories = [];
       self.error = '';
-
       self.statusList.clear();
       taskList.forEach(name => self.statusList.set(name, 'idle'));
+      self.statusList.set('hasIframeLoaded', 'idle');
     },
     onChangeUrl: event => (self.url = event.target.value),
     onChangeEmail: event => (self.email = event.target.value),
-    onIframeLoad: () => {
-      // self.statusList.set(name, status);
+    iframeOnLoad: () => {
+      if (self.statusList.get('hasIframeLoaded') !== 'error') {
+        self.statusList.set('hasIframeLoaded', 'ok');
+      }
     },
-    onIframeError: () => {
-      // self.statusList.set(name, status);
+    iframeOnError: () => {
+      self.statusList.set('hasIframeLoaded', 'error');
     },
     showFallback: () => {
       self.url = 'https://blog.frontity.com';
       self.getDemo();
+    },
+    afterCreate: () => {
+      self.reset();
     },
   }))
   .actions(taskActions)
