@@ -71,7 +71,7 @@ export default types
       self.setStatus('hasIframeLoaded', 'busy');
       const countdown = setTimeout(
         () => self.iframeOnError(),
-        10000, // error after 10 seconds
+        30000, // error after 30 seconds
       );
 
       yield when(() =>
@@ -122,7 +122,7 @@ export default types
     onChangeUrl: event => (self.url = event.target.value),
     onChangeEmail: event => (self.email = event.target.value),
     iframeOnLoad: () => {
-      if (self.statusList.get('hasIframeLoaded') !== 'error') {
+      if (self.statusList.get('hasIframeLoaded') === 'busy') {
         self.statusList.set('hasIframeLoaded', 'ok');
       }
     },
