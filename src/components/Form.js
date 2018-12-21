@@ -16,8 +16,7 @@ const Form = ({ getDemo, url, onChangeUrl, email, onChangeEmail, busy }) => (
       <FormField label="WordPress URL" htmlFor="url-input">
         <TextInput
           id="url-input"
-          type="url"
-          pattern="^http(s)?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+          pattern="^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
           required
           placeholder="https://myblog.com"
           value={url}

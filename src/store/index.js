@@ -62,6 +62,10 @@ export default types
         self.taskList.forEach(name => self.setStatus(name, 'ok'));
         console.log([...self.statusList.entries()], self.demoUrl);
       } else {
+        // Fix URLs without protocol
+        if (!/^(?:https?:\/\/)/.test(self.url)) {
+          self.url = `http://${self.url}`;
+        }
         yield self.runTasks();
       }
 
