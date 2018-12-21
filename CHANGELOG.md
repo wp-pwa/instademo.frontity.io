@@ -1,3 +1,13 @@
+## [1.1.1](https://github.com/frontity/autodemos/compare/v1.1.0...v1.1.1) (2018-12-21)
+
+
+### Bug Fixes
+
+* **form:** add form id ([4de6f47](https://github.com/frontity/autodemos/commit/4de6f47))
+* **form:** allow URLs without protocol ([5a746d4](https://github.com/frontity/autodemos/commit/5a746d4))
+* **status:** wait for iframe to load ([f4e53da](https://github.com/frontity/autodemos/commit/f4e53da))
+* **store:** increase iframe timeout ([ffe7dde](https://github.com/frontity/autodemos/commit/ffe7dde))
+
 # [1.1.0](https://github.com/frontity/autodemos/compare/v1.0.0...v1.1.0) (2018-12-20)
 
 
