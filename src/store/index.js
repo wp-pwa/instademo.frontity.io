@@ -23,7 +23,7 @@ export default types
     name: '',
     categories: types.array(types.frozen()),
     taskList: types.optional(types.array(types.string), taskList),
-    taskStatus: types.map(types.enumeration(['idle', 'busy', 'ok', 'error'])),
+    statusList: types.map(types.enumeration(['idle', 'busy', 'ok', 'error'])),
     error: '',
   })
   .views(self => ({
@@ -35,7 +35,7 @@ export default types
         .replace(/[./]/g, '-')}`;
     },
     get status() {
-      const statusArray = Array.from(self.taskStatus.values());
+      const statusArray = Array.from(self.statusList.values());
 
       if (!statusArray.length) return 'idle';
 
@@ -70,7 +70,7 @@ export default types
       // Log useful info
       console.log({
         status: self.status,
-        taskStatus: [...self.taskStatus.entries()],
+        statusList: [...self.statusList.entries()],
         error: self.error,
       });
 
@@ -87,11 +87,11 @@ export default types
         .query(result);
     }),
     setStatus: (name, status, error) => {
-      self.taskStatus.set(name, status);
+      self.statusList.set(name, status);
       if (error) self.error = error;
     },
     setAllStatus: status => {
-      self.taskStatus.forEach((_, key, map) => map.set(key, status));
+      self.statusList.forEach((_, key, map) => map.set(key, status));
     },
     setDemoUrl() {
       self.demoUrl = `${ssrServer}/?siteId=${
@@ -104,16 +104,16 @@ export default types
       self.categories = [];
       self.error = '';
 
-      self.taskStatus.clear();
-      taskList.forEach(name => self.taskStatus.set(name, 'idle'));
+      self.statusList.clear();
+      taskList.forEach(name => self.statusList.set(name, 'idle'));
     },
     onChangeUrl: event => (self.url = event.target.value),
     onChangeEmail: event => (self.email = event.target.value),
     onIframeLoad: () => {
-      // self.taskStatus.set(name, status);
+      // self.statusList.set(name, status);
     },
     onIframeError: () => {
-      // self.taskStatus.set(name, status);
+      // self.statusList.set(name, status);
     },
     showFallback: () => {
       self.url = 'https://blog.frontity.com';

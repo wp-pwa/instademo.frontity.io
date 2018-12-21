@@ -66,8 +66,8 @@ const InfoBox = ({ status, statusWP, statusPosts, statusDemo, demoUrl }) =>
 export default inject(
   ({ store }) => ({
     status: store.status,
-    statusWP: store.taskStatus.get('isWordPress'),
-    statusPosts: store.taskStatus.get('hasPosts'),
+    statusWP: store.statusList.get('isWordPress'),
+    statusPosts: store.statusList.get('hasPosts'),
     statusDemo: store.status,
     demoUrl: store.demoUrl,
   }),
