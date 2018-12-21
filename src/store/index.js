@@ -2,10 +2,18 @@ import { types, flow } from 'mobx-state-tree';
 import request from 'superagent';
 
 import databaseActions from './database-actions';
-import { actions as taskActions, taskList } from './tasks';
+import taskActions from './tasks';
 
 const ssrServer = 'https://ssr.wp-pwa.com';
 const staticServer = 'https://static.wp-pwa.com';
+
+const taskList = [
+  'isUrlAccessible',
+  'isWordPress',
+  'hasPosts',
+  'hasCategories',
+  'createDemo',
+];
 
 export default types
   .model('Store', {
@@ -14,6 +22,7 @@ export default types
     demoUrl: '',
     name: '',
     categories: types.array(types.frozen()),
+    taskList: types.optional(types.array(types.string), taskList),
     taskStatus: types.map(types.enumeration(['idle', 'busy', 'ok', 'error'])),
     error: '',
   })
@@ -52,11 +61,8 @@ export default types
         self.setDemoUrl();
         self.setAllStatus('ok');
       } else {
-        // First, check if the url is a valid WordPress blog
         yield self.runTasks();
         if (self.status !== 'error') {
-          // Then, create the demo
-          yield self.createDemo();
           self.setDemoUrl();
         }
       }
@@ -103,8 +109,12 @@ export default types
     },
     onChangeUrl: event => (self.url = event.target.value),
     onChangeEmail: event => (self.email = event.target.value),
-    onIframeLoad: () => {},
-    onIframeError: () => {},
+    onIframeLoad: () => {
+      // self.taskStatus.set(name, status);
+    },
+    onIframeError: () => {
+      // self.taskStatus.set(name, status);
+    },
     showFallback: () => {
       self.url = 'https://blog.frontity.com';
       self.getDemo();

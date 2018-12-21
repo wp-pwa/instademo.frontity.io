@@ -4,14 +4,7 @@ import { decode } from 'he';
 
 const proxy = 'https://cdn.frontity.cloud/';
 
-export const taskList = [
-  'isUrlAccessible',
-  'isWordPress',
-  'hasPosts',
-  'hasCategories',
-];
-
-export const actions = self => ({
+export default self => ({
   isUrlAccessible: flow(function* isUrlAccessible() {
     try {
       yield request(`${proxy}${self.url}`)
@@ -56,7 +49,7 @@ export const actions = self => ({
   }),
   runTasks: flow(function* runTasks() {
     try {
-      for (let name of taskList) {
+      for (let name of self.taskList) {
         yield self.runTask(name);
       }
     } catch (error) {
