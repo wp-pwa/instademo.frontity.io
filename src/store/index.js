@@ -1,12 +1,20 @@
 import { types, flow } from 'mobx-state-tree';
+import { when } from 'mobx';
 import request from 'superagent';
 
-import api from './api-actions';
-import database from './database-actions';
-import tasks from './tasks';
+import databaseActions from './database-actions';
+import taskActions from './tasks';
 
 const ssrServer = 'https://ssr.wp-pwa.com';
 const staticServer = 'https://static.wp-pwa.com';
+
+const taskList = [
+  'isUrlAccessible',
+  'isWordPress',
+  'hasPosts',
+  'hasCategories',
+  'createDemo',
+];
 
 export default types
   .model('Store', {
@@ -15,7 +23,8 @@ export default types
     demoUrl: '',
     name: '',
     categories: types.array(types.frozen()),
-    statuses: types.map(types.enumeration(['idle', 'busy', 'ok', 'error'])),
+    taskList: types.optional(types.array(types.string), taskList),
+    statusList: types.map(types.enumeration(['idle', 'busy', 'ok', 'error'])),
     error: '',
   })
   .views(self => ({
@@ -27,7 +36,7 @@ export default types
         .replace(/[./]/g, '-')}`;
     },
     get status() {
-      const statusArray = Array.from(self.statuses.values());
+      const statusArray = Array.from(self.statusList.values());
 
       if (!statusArray.length) return 'idle';
 
@@ -50,22 +59,34 @@ export default types
       const isCreated = yield self.isDemoCreated();
 
       if (isCreated) {
-        self.setDemoUrl();
-        self.setAllStatus('ok');
+        self.taskList.forEach(name => self.setStatus(name, 'ok'));
+        console.log([...self.statusList.entries()], self.demoUrl);
       } else {
-        // First, check if the url is a valid WordPress blog
-        yield self.runTasks();
-        if (self.status !== 'error') {
-          // Then, create the demo
-          yield self.createDemo();
-          self.setDemoUrl();
+        // Fix URLs without protocol
+        if (!/^(?:https?:\/\/)/.test(self.url)) {
+          self.url = `http://${self.url}`;
         }
+        yield self.runTasks();
       }
+
+      if (self.status !== 'error') self.setDemoUrl();
+
+      // Wait for iframe load or error
+      self.setStatus('hasIframeLoaded', 'busy');
+      const countdown = setTimeout(
+        () => self.iframeOnError(),
+        30000, // error after 30 seconds
+      );
+
+      yield when(() =>
+        ['ok', 'error'].includes(self.statusList.get('hasIframeLoaded')),
+      );
+      clearTimeout(countdown);
 
       // Log useful info
       console.log({
         status: self.status,
-        statuses: [...self.statuses.entries()],
+        statusList: [...self.statusList.entries()],
         error: self.error,
       });
 
@@ -82,11 +103,11 @@ export default types
         .query(result);
     }),
     setStatus: (name, status, error) => {
-      self.statuses.set(name, status);
+      self.statusList.set(name, status);
       if (error) self.error = error;
     },
     setAllStatus: status => {
-      self.statuses.forEach((_, key, map) => map.set(key, status));
+      self.statusList.forEach((_, key, map) => map.set(key, status));
     },
     setDemoUrl() {
       self.demoUrl = `${ssrServer}/?siteId=${
@@ -98,17 +119,28 @@ export default types
       self.name = '';
       self.categories = [];
       self.error = '';
-
-      self.statuses.clear();
-      tasks.forEach(({ name }) => self.statuses.set(name, 'idle'));
+      self.statusList.clear();
+      taskList.forEach(name => self.statusList.set(name, 'idle'));
+      self.statusList.set('hasIframeLoaded', 'idle');
     },
     onChangeUrl: event => (self.url = event.target.value),
     onChangeEmail: event => (self.email = event.target.value),
+    iframeOnLoad: () => {
+      if (self.statusList.get('hasIframeLoaded') === 'busy') {
+        self.statusList.set('hasIframeLoaded', 'ok');
+      }
+    },
+    iframeOnError: () => {
+      self.statusList.set('hasIframeLoaded', 'error');
+    },
     showFallback: () => {
       self.url = 'https://blog.frontity.com';
       self.getDemo();
     },
+    afterCreate: () => {
+      self.reset();
+    },
   }))
-  .actions(api)
-  .actions(database)
+  .actions(taskActions)
+  .actions(databaseActions)
   .create({});

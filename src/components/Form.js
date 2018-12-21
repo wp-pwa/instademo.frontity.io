@@ -4,7 +4,7 @@ import Icon from './Icon';
 import inject from './inject';
 
 const Form = ({ getDemo, url, onChangeUrl, email, onChangeEmail, busy }) => (
-  <form onSubmit={getDemo}>
+  <form id="form-autodemos" onSubmit={getDemo}>
     <Box
       gap="small"
       pad="40px"
@@ -16,8 +16,7 @@ const Form = ({ getDemo, url, onChangeUrl, email, onChangeEmail, busy }) => (
       <FormField label="WordPress URL" htmlFor="url-input">
         <TextInput
           id="url-input"
-          type="url"
-          pattern="^http(s)?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+          pattern="^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
           required
           placeholder="https://myblog.com"
           value={url}
