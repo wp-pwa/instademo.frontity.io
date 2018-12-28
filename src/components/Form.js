@@ -4,7 +4,7 @@ import Icon from './Icon';
 import inject from './inject';
 
 const Form = ({ getDemo, url, onChangeUrl, email, onChangeEmail, busy }) => (
-  <form id="form-autodemos" onSubmit={getDemo}>
+  <form id="form-instademos" onSubmit={getDemo}>
     <Box
       gap="small"
       pad="40px"
