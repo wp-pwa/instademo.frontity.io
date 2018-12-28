@@ -1,17 +1,17 @@
 {
-  "name": "instademos.frontity.io",
+  "name": "instademo.frontity.io",
   "version": "1.1.0",
   "private": true,
   "description": "Demo generator to preview Frontity with your blog",
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/frontity/instademos.frontity.io.git"
+    "url": "https://github.com/frontity/instademo.frontity.io.git"
   },
   "author": "david@frontity.com",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/frontity/instademos.frontity.io/issues"
+    "url": "https://github.com/frontity/instademo.frontity.io/issues"
   },
   "main": "src/index.js",
   "dependencies": {
