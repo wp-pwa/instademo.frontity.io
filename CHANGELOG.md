@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/frontity/instademo.frontity.io/compare/v1.1.1...v1.1.2) (2018-12-31)
+
+
+### Bug Fixes
+
+* **store:** change integromat fields ([d5efec1](https://github.com/frontity/instademo.frontity.io/commit/d5efec1))
+
 ## [1.1.1](https://github.com/frontity/autodemos/compare/v1.1.0...v1.1.1) (2018-12-21)
 
 
