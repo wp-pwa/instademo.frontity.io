@@ -92,8 +92,8 @@ export default types
 
       // Send data to integromat
       const result = {
-        source: 'demo',
-        wpUrl: self.url,
+        origin: 'demo',
+        url: self.url,
         email: self.email,
         status: self.status,
         error: self.error,
