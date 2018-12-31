@@ -6,12 +6,12 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/frontity/autodemos.git"
+    "url": "https://github.com/frontity/instademo.frontity.io.git"
   },
   "author": "david@frontity.com",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/frontity/autodemos/issues"
+    "url": "https://github.com/frontity/instademo.frontity.io/issues"
   },
   "main": "src/index.js",
   "dependencies": {
