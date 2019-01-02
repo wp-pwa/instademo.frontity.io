@@ -90,7 +90,6 @@ export default types
         error: self.error,
       });
 
-      // Send data to integromat
       const result = {
         origin: 'demo',
         url: self.url,
@@ -98,6 +97,12 @@ export default types
         status: self.status,
         error: self.error,
       };
+
+      // Send data to GTM
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'instademoResult', result });
+
+      // Send data to integromat
       yield request
         .post('https://hook.integromat.com/9jvf2oiladaib7wbb9k75odshqw6bork')
         .query(result);
