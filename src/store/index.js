@@ -68,19 +68,21 @@ export default types
         yield self.runTasks();
       }
 
-      if (self.status !== 'error') self.setDemoUrl();
+      if (self.status !== 'error') {
+        self.setDemoUrl();
 
-      // Wait for iframe load or error
-      self.setStatus('hasIframeLoaded', 'busy');
-      const countdown = setTimeout(
-        () => self.iframeOnError(),
-        30000, // error after 30 seconds
-      );
+        // Wait for iframe load or error
+        self.setStatus('hasIframeLoaded', 'busy');
+        const countdown = setTimeout(
+          () => self.iframeOnError(),
+          30000, // error after 30 seconds
+        );
 
-      yield when(() =>
-        ['ok', 'error'].includes(self.statusList.get('hasIframeLoaded')),
-      );
-      clearTimeout(countdown);
+        yield when(() =>
+          ['ok', 'error'].includes(self.statusList.get('hasIframeLoaded')),
+        );
+        clearTimeout(countdown);
+      }
 
       // Log useful info
       console.log({
