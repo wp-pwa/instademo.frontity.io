@@ -1,6 +1,5 @@
 import { types, flow } from 'mobx-state-tree';
 import { when } from 'mobx';
-import request from 'superagent';
 
 import databaseActions from './database-actions';
 import taskActions from './tasks';
