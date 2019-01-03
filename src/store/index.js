@@ -1,6 +1,5 @@
 import { types, flow } from 'mobx-state-tree';
 import { when } from 'mobx';
-import request from 'superagent';
 
 import databaseActions from './database-actions';
 import taskActions from './tasks';
@@ -69,19 +68,21 @@ export default types
         yield self.runTasks();
       }
 
-      if (self.status !== 'error') self.setDemoUrl();
+      if (self.status !== 'error') {
+        self.setDemoUrl();
 
-      // Wait for iframe load or error
-      self.setStatus('hasIframeLoaded', 'busy');
-      const countdown = setTimeout(
-        () => self.iframeOnError(),
-        30000, // error after 30 seconds
-      );
+        // Wait for iframe load or error
+        self.setStatus('hasIframeLoaded', 'busy');
+        const countdown = setTimeout(
+          () => self.iframeOnError(),
+          30000, // error after 30 seconds
+        );
 
-      yield when(() =>
-        ['ok', 'error'].includes(self.statusList.get('hasIframeLoaded')),
-      );
-      clearTimeout(countdown);
+        yield when(() =>
+          ['ok', 'error'].includes(self.statusList.get('hasIframeLoaded')),
+        );
+        clearTimeout(countdown);
+      }
 
       // Log useful info
       console.log({
@@ -90,17 +91,19 @@ export default types
         error: self.error,
       });
 
-      // Send data to integromat
       const result = {
-        origin: 'demo',
         url: self.url,
         email: self.email,
         status: self.status,
         error: self.error,
       };
-      yield request
-        .post('https://hook.integromat.com/9jvf2oiladaib7wbb9k75odshqw6bork')
-        .query(result);
+
+      // Send data to GTM
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'instademoResultEvent',
+        instademoResultEvent: result,
+      });
     }),
     setStatus: (name, status, error) => {
       self.statusList.set(name, status);
