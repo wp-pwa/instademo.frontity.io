@@ -1,3 +1,16 @@
+# [1.2.0](https://github.com/frontity/instademo.frontity.io/compare/v1.1.2...v1.2.0) (2019-01-03)
+
+
+### Bug Fixes
+
+* **demo:** use main status to show iframe progress ([9bb4a5b](https://github.com/frontity/instademo.frontity.io/commit/9bb4a5b))
+* **get-demo:** wait for the iframe to load if there is no error ([2d8dfe1](https://github.com/frontity/instademo.frontity.io/commit/2d8dfe1))
+
+
+### Features
+
+* **events:** send result event to GTM ([a73c14d](https://github.com/frontity/instademo.frontity.io/commit/a73c14d))
+
 ## [1.1.2](https://github.com/frontity/instademo.frontity.io/compare/v1.1.1...v1.1.2) (2018-12-31)
 
 
