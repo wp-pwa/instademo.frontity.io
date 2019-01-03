@@ -99,8 +99,8 @@ export default types
       // Send data to GTM
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
-        event: 'instademoEvent',
-        instademoEvent: result,
+        event: 'instademoResultEvent',
+        instademoResultEvent: result,
       });
     }),
     setStatus: (name, status, error) => {
