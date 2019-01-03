@@ -39,7 +39,7 @@ const Demo = ({
     >
       <Stack>
         <Box width={width} height={height} align="center" justify="center">
-          {(status === 'busy' || status === 'ok') && (
+          {src && (status === 'busy' || status === 'ok') && (
             <Box animation="fadeIn">
               <Spinner />
             </Box>
@@ -99,7 +99,7 @@ const Iframe = styled.iframe`
 
 export default inject(
   ({ store }) => ({
-    status: store.statusList.get('hasIframeLoaded'),
+    status: store.status,
     src: store.demoUrl,
     showFallback: store.showFallback,
     iframeOnLoad: store.iframeOnLoad,
