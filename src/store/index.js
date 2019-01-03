@@ -90,7 +90,6 @@ export default types
       });
 
       const result = {
-        origin: 'demo',
         url: self.url,
         email: self.email,
         status: self.status,
