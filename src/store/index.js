@@ -100,7 +100,7 @@ export default types
 
       // Send data to GTM
       window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'viewDemoEvent', data: result });
+      window.dataLayer.push({ event: 'instademoEvent', data: result });
     }),
     setStatus: (name, status, error) => {
       self.statusList.set(name, status);
