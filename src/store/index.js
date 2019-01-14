@@ -123,18 +123,22 @@ export default types
       self.categories = [];
       self.error = '';
       self.statusList.clear();
-      taskList.forEach(name => self.statusList.set(name, 'idle'));
-      self.statusList.set('hasIframeLoaded', 'idle');
+      taskList.forEach(name => self.setStatus(name, 'idle'));
+      self.setStatus('hasIframeLoaded', 'idle');
     },
     onChangeUrl: event => (self.url = event.target.value),
     onChangeEmail: event => (self.email = event.target.value),
     iframeOnLoad: () => {
       if (self.statusList.get('hasIframeLoaded') === 'busy') {
-        self.statusList.set('hasIframeLoaded', 'ok');
+        self.setStatus('hasIframeLoaded', 'ok');
       }
     },
     iframeOnError: () => {
-      self.statusList.set('hasIframeLoaded', 'error');
+      self.setStatus(
+        'hasIframeLoaded',
+        'error',
+        'Demo created but iframe did not load',
+      );
     },
     showFallback: () => {
       self.url = 'https://blog.frontity.com';
