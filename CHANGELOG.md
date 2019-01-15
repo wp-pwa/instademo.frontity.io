@@ -1,3 +1,11 @@
+## [1.2.1](https://github.com/frontity/instademo.frontity.io/compare/v1.2.0...v1.2.1) (2019-01-15)
+
+
+### Bug Fixes
+
+* **status:** change iframe timeout message and increase timeout ([073ab26](https://github.com/frontity/instademo.frontity.io/commit/073ab26))
+* **status:** set an error message when the iframe doesn't load ([0cda3af](https://github.com/frontity/instademo.frontity.io/commit/0cda3af))
+
 # [1.2.0](https://github.com/frontity/instademo.frontity.io/compare/v1.1.2...v1.2.0) (2019-01-03)
 
 
