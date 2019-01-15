@@ -75,7 +75,7 @@ export default types
         self.setStatus('hasIframeLoaded', 'busy');
         const countdown = setTimeout(
           () => self.iframeOnError(),
-          30000, // error after 30 seconds
+          60000, // error after 60 seconds
         );
 
         yield when(() =>
@@ -134,11 +134,7 @@ export default types
       }
     },
     iframeOnError: () => {
-      self.setStatus(
-        'hasIframeLoaded',
-        'error',
-        'Demo created but iframe did not load',
-      );
+      self.setStatus('hasIframeLoaded', 'error', 'Iframe timeout');
     },
     showFallback: () => {
       self.url = 'https://blog.frontity.com';
