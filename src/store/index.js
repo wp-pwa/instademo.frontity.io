@@ -93,6 +93,7 @@ export default types
 
       const result = {
         url: self.url,
+        demoUrl: self.demoUrl,
         email: self.email,
         status: self.status,
         error: self.error,
