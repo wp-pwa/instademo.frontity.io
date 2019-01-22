@@ -7,9 +7,7 @@ const proxy = 'https://cdn.frontity.cloud/';
 export default self => ({
   isUrlAccessible: flow(function* isUrlAccessible() {
     try {
-      yield request(`${proxy}${self.url}`)
-        .accept('text/html')
-        .timeout({ response: 10000 });
+      yield request(`${proxy}${self.url}`).accept('text/html');
     } catch (error) {
       return errorInfo('Error accessing URL', error);
     }
@@ -73,8 +71,7 @@ const apiGet = async (wpUrl, endpoint, query) => {
   const restRoute = `${endpoint}${query ? `&${query}` : ''}`;
   const { body } = await request
     .get(`${proxy}${wpUrl}/?rest_route=${restRoute}`)
-    .accept('application/json')
-    .timeout({ response: 10000 });
+    .accept('application/json');
   return body;
 };
 
