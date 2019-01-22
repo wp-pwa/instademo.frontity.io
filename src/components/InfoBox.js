@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text, Paragraph, Anchor } from 'grommet';
+import { Box, Text, Paragraph, Anchor, TextArea } from 'grommet';
 // import { StatusInfo, StatusGood, StatusWarning } from 'grommet-icons';
 import QRCode from 'qrcode.react';
 import styled from 'styled-components';
@@ -35,9 +35,14 @@ const InfoBox = ({ status, statusWP, statusPosts, statusDemo, demoUrl }) =>
             <Box width="128px" height="128px">
               <QRCode value={demoUrl || 'DEMO'} />
             </Box>
-            <Text as="label" textAlign="center">
-              Scan QR code to view this demo on your mobile phone and discover
-              more features
+            <Box fill="horizontal">
+              <TextArea fill value={demoUrl} resize={false} fontSize="11px" />
+            </Box>
+            <Text textAlign="center" size="16px">
+              <strong>Scan QR code</strong> or{' '}
+              <strong>copy and paste this URL</strong> on your{' '}
+              <strong>mobile browser</strong> to view this demo on your mobile
+              phone.
             </Text>
           </Box>
         </Opacity>
