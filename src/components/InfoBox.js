@@ -1,5 +1,12 @@
 import React from 'react';
-import { Box, Text, Paragraph, Anchor } from 'grommet';
+import {
+  Box,
+  Text,
+  Paragraph,
+  Anchor,
+  TextArea,
+  ResponsiveContext,
+} from 'grommet';
 // import { StatusInfo, StatusGood, StatusWarning } from 'grommet-icons';
 import QRCode from 'qrcode.react';
 import styled from 'styled-components';
@@ -31,15 +38,40 @@ const InfoBox = ({ status, statusWP, statusPosts, statusDemo, demoUrl }) =>
       )}
       {status !== 'error' ? (
         <Opacity value={status === 'ok' ? 1 : 0.2}>
-          <Box align="center" gap="medium">
-            <Box width="128px" height="128px">
-              <QRCode value={demoUrl || 'DEMO'} />
-            </Box>
-            <Text as="label" textAlign="center">
-              Scan QR code to view this demo on your mobile phone and discover
-              more features
-            </Text>
-          </Box>
+          <ResponsiveContext.Consumer>
+            {breakpoint =>
+              breakpoint === 'small' ? (
+                <Box align="center" gap="medium">
+                  <Text textAlign="center" size="16px">
+                    <Anchor color="brand" href={demoUrl}>
+                      Click here
+                    </Anchor>{' '}
+                    to view this demo on your mobile phone.
+                  </Text>
+                </Box>
+              ) : (
+                <Box align="center" gap="medium">
+                  <Box width="128px" height="128px">
+                    <QRCode value={demoUrl || 'DEMO'} />
+                  </Box>
+                  <Box fill="horizontal">
+                    <TextArea
+                      fill
+                      value={demoUrl}
+                      resize={false}
+                      fontSize="11px"
+                    />
+                  </Box>
+                  <Text textAlign="center" size="16px">
+                    <strong>Scan QR code</strong> or{' '}
+                    <strong>copy and paste this URL</strong> on your{' '}
+                    <strong>mobile browser</strong> to view this demo on your
+                    mobile phone.
+                  </Text>
+                </Box>
+              )
+            }
+          </ResponsiveContext.Consumer>
         </Opacity>
       ) : (
         <Box gap="medium">

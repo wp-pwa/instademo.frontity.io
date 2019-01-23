@@ -59,7 +59,7 @@ export default types
 
       if (isCreated) {
         self.taskList.forEach(name => self.setStatus(name, 'ok'));
-        console.log([...self.statusList.entries()], self.demoUrl);
+        // console.log([...self.statusList.entries()], self.demoUrl);
       } else {
         // Fix URLs without protocol
         if (!/^(?:https?:\/\/)/.test(self.url)) {
@@ -85,14 +85,15 @@ export default types
       }
 
       // Log useful info
-      console.log({
-        status: self.status,
-        statusList: [...self.statusList.entries()],
-        error: self.error,
-      });
+      // console.log({
+      //  status: self.status,
+      //  statusList: [...self.statusList.entries()],
+      //  error: self.error,
+      // });
 
       const result = {
         url: self.url,
+        demoUrl: self.demoUrl,
         email: self.email,
         status: self.status,
         error: self.error,
