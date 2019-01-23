@@ -46,6 +46,17 @@ export default {
       letter-spacing: 1.5px;
     `,
   },
+  textArea: {
+    extend: css`
+      background: rgba(31, 56, 197, 0.08);
+      border: 2px solid rgba(31, 56, 197, 0.24);
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-weight: normal;
+      ${({ resize }) => (resize === false ? 'resize: none;' : '')}
+      ${({ fontSize }) => (fontSize ? `font-size: ${fontSize};` : '')}
+    `,
+  },
   grommet: {
     extend: css`
       label {
