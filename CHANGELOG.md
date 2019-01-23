@@ -1,3 +1,13 @@
+## [1.2.2](https://github.com/frontity/instademo.frontity.io/compare/v1.2.1...v1.2.2) (2019-01-23)
+
+
+### Bug Fixes
+
+* **info-box:** show demo url on UI ([5bf3191](https://github.com/frontity/instademo.frontity.io/commit/5bf3191))
+* **info-box:** show only a link when the demo is generated on mobile ([69d45d7](https://github.com/frontity/instademo.frontity.io/commit/69d45d7))
+* **store:** send demoUrl to GTM ([98f7df7](https://github.com/frontity/instademo.frontity.io/commit/98f7df7))
+* **tasks:** remove all timeouts ([0e15bc0](https://github.com/frontity/instademo.frontity.io/commit/0e15bc0))
+
 ## [1.2.1](https://github.com/frontity/instademo.frontity.io/compare/v1.2.0...v1.2.1) (2019-01-15)
 
 
