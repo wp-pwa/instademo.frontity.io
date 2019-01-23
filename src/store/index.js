@@ -86,10 +86,10 @@ export default types
 
       // Log useful info
       // console.log({
-        status: self.status,
-        statusList: [...self.statusList.entries()],
-        error: self.error,
-      });
+      //  status: self.status,
+      //  statusList: [...self.statusList.entries()],
+      //  error: self.error,
+      // });
 
       const result = {
         url: self.url,
